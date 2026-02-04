@@ -13,7 +13,7 @@ load_dotenv()
 SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
 # ⚠️ REPLACE 'password' with your actual PostgreSQL password
 # Format: postgresql://username:password@localhost/dbname
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:ishita1234@localhost/supply_chain_db"
+SQLALCHEMY_DATABASE_URL = "postgresql://username:password@localhost/dbname"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -26,4 +26,5 @@ def get_db():
     try:
         yield db
     finally:
+
         db.close()
