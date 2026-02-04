@@ -1,0 +1,21 @@
+# Your existing dependencies
+fastapi
+uvicorn
+sqlalchemy
+pydantic
+python-dotenv
+pandas
+geopy
+requests
+
+# Friend's forecast dependencies
+prophet
+google-generativeai
+pydantic-settings
+plotly
+
+# Shared Streamlit dependencies
+streamlit
+streamlit-folium
+folium
+polyline
