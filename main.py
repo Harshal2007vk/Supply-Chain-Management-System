@@ -18,6 +18,8 @@ import re
 
 from data_preparation import prepare_category_data, get_data_summary
 from forecast_service import run_demand_forecast
+from ai_agent import SupplyChainAgent
+from blockchain import record_shipment, get_full_trail, verify_chain
 from ai_insight_service import generate_ai_insight
 from evaluation import evaluate_forecast_accuracy, get_model_diagnostics
 from config import settings, get_festivals_for_month, validate_forecast_horizon
@@ -1519,4 +1521,37 @@ def plan_route(request: RouteRequest):
         "end_coords": [end_lat, end_lon],
         "route_info": route_data,
         "risk_analysis": analyze_order_with_groq(request.end_address)
+    }
+# Blockchain Routes
+@app.post("/blockchain/record")
+def blockchain_record(
+    stage: str,
+    location: str,
+    quantity: str,
+    product: str,
+    status: str = "verified"
+):
+    block = record_shipment(stage, location, quantity, product, status)
+    return {
+        "success": True,
+        "block_index": block.index,
+        "hash": block.hash[:16] + "...",
+        "timestamp": block.timestamp,
+        "data": block.data
+    }
+
+@app.get("/blockchain/trail")
+def blockchain_trail():
+    return {
+        "chain_valid": verify_chain(),
+        "total_blocks": len(get_full_trail()),
+        "trail": get_full_trail()
+    }
+
+@app.get("/blockchain/verify")
+def blockchain_verify():
+    valid = verify_chain()
+    return {
+        "valid": valid,
+        "message": "Chain is secure!" if valid else "Chain tampered!"
     }
